@@ -172,3 +172,5 @@ public class NoteSearch extends Activity implements SearchView.OnQueryTextListen
 ```
 ## 更换背景颜色
 ![UI美化](https://github.com/choujvzi/NotePad/blob/master/screenshots/UImeihua.png)
+![更换颜色](https://github.com/choujvzi/NotePad/blob/master/screenshots/changecolor.png)
+![更换颜色1]()
