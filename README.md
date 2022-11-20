@@ -174,3 +174,178 @@ public class NoteSearch extends Activity implements SearchView.OnQueryTextListen
 ![UI美化](https://github.com/choujvzi/NotePad/blob/master/screenshots/UImeihua.png)
 ![更换颜色](https://github.com/choujvzi/NotePad/blob/master/screenshots/changecolor.png)
 ![更换颜色1](https://github.com/choujvzi/NotePad/blob/master/screenshots/changecolor1.png)
+### 部分代码如下：
+```java
+        <activity android:name="NotesList" android:label="@string/title_notes_list"
+                  android:theme="@android:style/Theme.Holo.Light">
+```
+```java
+        public static final int DEFAULT_COLOR = 0; //white
+        public static final int YELLOW_COLOR = 1; //yellow
+        public static final int BLUE_COLOR = 2; //blue
+        public static final int GREEN_COLOR = 3; //green
+        public static final int RED_COLOR = 4; //red
+```
+```java
+package com.example.android.notepad;
+
+import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Color;
+import android.view.View;
+import android.widget.SimpleCursorAdapter;
+
+public class MyCursorAdapter extends SimpleCursorAdapter {
+    public MyCursorAdapter(Context context, int layout, Cursor c,
+                           String[] from, int[] to) {
+        super(context, layout, c, from, to);
+    }
+    @Override
+    public void bindView(View view, Context context, Cursor cursor){
+        super.bindView(view, context, cursor);
+        //Get the color data corresponding to the note list from the cursor read from the database, and set the note color
+        int x = cursor.getInt(cursor.getColumnIndex(NotePad.Notes.COLUMN_NAME_BACK_COLOR));
+        /**
+         * white 255 255 255
+         * yellow 247 216 133
+         * blue 165 202 237
+         * green 161 214 174
+         * red 244 149 133
+         */
+        switch (x){
+            case NotePad.Notes.DEFAULT_COLOR:
+                view.setBackgroundColor(Color.rgb(255, 255, 255));
+                break;
+            case NotePad.Notes.YELLOW_COLOR:
+                view.setBackgroundColor(Color.rgb(247, 216, 133));
+                break;
+            case NotePad.Notes.BLUE_COLOR:
+                view.setBackgroundColor(Color.rgb(165, 202, 237));
+                break;
+            case NotePad.Notes.GREEN_COLOR:
+                view.setBackgroundColor(Color.rgb(161, 214, 174));
+                break;
+            case NotePad.Notes.RED_COLOR:
+                view.setBackgroundColor(Color.rgb(244, 149, 133));
+                break;
+            default:
+                view.setBackgroundColor(Color.rgb(255, 255, 255));
+                break;
+        }
+    }
+}
+```
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageButton
+        android:id="@+id/color_white"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:background="@color/colorWhite"
+        android:onClick="white"/>
+    <ImageButton
+        android:id="@+id/color_yellow"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:background="@color/colorYellow"
+        android:onClick="yellow"/>
+    <ImageButton
+        android:id="@+id/color_blue"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:background="@color/colorBlue"
+        android:onClick="blue"/>
+    <ImageButton
+        android:id="@+id/color_green"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:background="@color/colorGreen"
+        android:onClick="green"/>
+    <ImageButton
+        android:id="@+id/color_red"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:background="@color/colorRed"
+        android:onClick="red"/>
+</LinearLayout>
+```
+```java
+package com.example.android.notepad;
+
+import android.app.Activity;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+
+public class NoteColor extends Activity {
+    private Cursor mCursor;
+    private Uri mUri;
+    private int color;
+    private static final int COLUMN_INDEX_TITLE = 1;
+    private static final String[] PROJECTION = new String[] {
+            NotePad.Notes._ID, // 0
+            NotePad.Notes.COLUMN_NAME_BACK_COLOR,
+    };
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.note_color);
+        //Uri passed in from noteeditor
+        mUri = getIntent().getData();
+        mCursor = managedQuery(
+                mUri,        // The URI for the note that is to be retrieved.
+                PROJECTION,  // The columns to retrieve
+                null,        // No selection criteria are used, so no where columns are needed.
+                null,        // No where columns are used, so no where values are needed.
+                null         // No sort order is needed.
+        );
+    }
+    @Override
+    protected void onResume(){
+        //The execution order is after oncreate
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+            color = mCursor.getInt(COLUMN_INDEX_TITLE);
+        }
+        super.onResume();
+    }
+    @Override
+    protected void onPause() {
+        //After finish(), the selected color is stored in the database
+        super.onPause();
+        ContentValues values = new ContentValues();
+        values.put(NotePad.Notes.COLUMN_NAME_BACK_COLOR, color);
+        getContentResolver().update(mUri, values, null, null);
+    }
+    public void white(View view){
+        color = NotePad.Notes.DEFAULT_COLOR;
+        finish();
+    }
+    public void yellow(View view){
+        color = NotePad.Notes.YELLOW_COLOR;
+        finish();
+    }
+    public void blue(View view){
+        color = NotePad.Notes.BLUE_COLOR;
+        finish();
+    }
+    public void green(View view){
+        color = NotePad.Notes.GREEN_COLOR;
+        finish();
+    }
+    public void red(View view){
+        color = NotePad.Notes.RED_COLOR;
+        finish();
+    }
+
+}
+```
