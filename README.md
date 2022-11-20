@@ -351,6 +351,7 @@ public class NoteColor extends Activity {
 ```
 ## 排序
 ![排序](https://github.com/choujvzi/NotePad/blob/master/screenshots/sort.png)
-![创建时间排序]()
-![修改时间排序]()
-![颜色排序]()
+![创建时间排序](https://github.com/choujvzi/NotePad/blob/master/screenshots/starttimesort.png)
+![修改时间排序](https://github.com/choujvzi/NotePad/blob/master/screenshots/edittimesort.png)
+![颜色排序](https://github.com/choujvzi/NotePad/blob/master/screenshots/colorsort.png)
+###部分代码如下：
