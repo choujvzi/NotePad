@@ -40,7 +40,7 @@ private static final String[] PROJECTION = new String[] {
         />
 </LinearLayout>
 ```
-``java
+```java
 private final void updateNote(String text, String title) {
 
         // Sets up a map to contain values to be updated in the provider.
