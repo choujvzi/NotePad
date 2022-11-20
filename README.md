@@ -354,4 +354,79 @@ public class NoteColor extends Activity {
 ![创建时间排序](https://github.com/choujvzi/NotePad/blob/master/screenshots/starttimesort.png)
 ![修改时间排序](https://github.com/choujvzi/NotePad/blob/master/screenshots/edittimesort.png)
 ![颜色排序](https://github.com/choujvzi/NotePad/blob/master/screenshots/colorsort.png)
-###部分代码如下：
+### 部分代码如下：
+```java
+<item
+    android:id="@+id/menu_sort"
+    android:title="@string/menu_sort"
+    android:icon="@android:drawable/ic_menu_sort_by_size"
+    android:showAsAction="always" >
+    <menu>
+        <item
+            android:id="@+id/menu_sort1"
+            android:title="@string/menu_sort1"/>
+        <item
+            android:id="@+id/menu_sort2"
+            android:title="@string/menu_sort2"/>
+        <item
+            android:id="@+id/menu_sort3"
+            android:title="@string/menu_sort3"/>
+        </menu>
+    </item>
+```
+```java
+//创建时间排序
+    case R.id.menu_sort1:
+        cursor = managedQuery(
+                getIntent().getData(),            
+                PROJECTION,                      
+                null,                          
+                null,                          
+                NotePad.Notes._ID 
+                );
+        adapter = new MyCursorAdapter(
+                this,
+                R.layout.noteslist_item,
+                cursor,
+                dataColumns,
+                viewIDs
+        );
+        setListAdapter(adapter);
+        return true;
+ //修改时间排序
+    case R.id.menu_sort2:
+        cursor = managedQuery(
+                getIntent().getData(),          
+                PROJECTION,                      
+                null,                            
+                null,                       
+                NotePad.Notes.DEFAULT_SORT_ORDER 
+        );
+        adapter = new MyCursorAdapter(
+                this,
+                R.layout.noteslist_item,
+                cursor,
+                dataColumns,
+                viewIDs
+        );
+        setListAdapter(adapter);
+        return true;
+    //颜色排序
+    case R.id.menu_sort3:
+        cursor = managedQuery(
+                getIntent().getData(),
+                PROJECTION,      
+                null,       
+                null,       
+                NotePad.Notes.COLUMN_NAME_BACK_COLOR
+                );
+        adapter = new MyCursorAdapter(
+                this,
+                R.layout.noteslist_item,
+                cursor,
+                dataColumns,
+                viewIDs
+                );
+        setListAdapter(adapter);
+        return true;
+  ```
